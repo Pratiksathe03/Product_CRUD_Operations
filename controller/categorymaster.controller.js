@@ -4,7 +4,7 @@ const categorymasterValidator = require("../validator/categorymaster.validator.j
 // to fetch categorymaster details
 exports.getCategoryMasterDetails = (req, res) => {
   try {
-    const data = req.params;
+    const data = req.query;
     const validation = categorymasterValidator.ValidateGetRquest(data);
     if (validation && validation.error) {
       throw new Error(validation.error.message);
@@ -37,7 +37,7 @@ exports.createCategoryMasterDetails = (req, res) => {
       throw new Error(validation.error.message);
     } else {
       categorymasterService
-        .getCategoryMasterDetails(data)
+        .createNewCategoryMasterDetails(data)
         .then(result => {
           //   console.log("rerererre=",result)
           res.status(200).send(result);

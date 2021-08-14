@@ -1,21 +1,18 @@
 const sequelize = require("sequelize");
 const db = require("../models");
-const datetime = require('datetime');
+const datetime = require('node-datetime');
 
-// db.categorymaster.findAndCountAll().then(data=>{
-//     console.log("======",data)
-// });
 
 exports.getCategoryMasterDetails = reqArg => {
   return new Promise((resolve, reject) => {
     let whereCnd = {};
     if (reqArg) {
-      reqArg.catid ? (whereCnd.catid = Number(reqArg.catid)) : "";
-      reqArg.category ? (whereCnd.category = reqArg.category) : "";
-      reqArg.desctiption ? (whereCnd.desctiption = reqArg.desctiption) : "";
+      reqArg.catid ? whereCnd.catid = Number(reqArg.catid) : "";
+      reqArg.category ? whereCnd.category = reqArg.category : "";
+      reqArg.desctiption ? whereCnd.desctiption = reqArg.desctiption : "";
     }
 
-    categorymaster
+    db.categorymaster
       .findAndCountAll({
         where: whereCnd,
         order: [
@@ -61,13 +58,12 @@ exports.createNewCategoryMasterDetails = reqArg => {
     if (reqArg) {
       reqArg.category ? (whereCnd.category = reqArg.category) : "";
     }
-    categorymaster
+    db.categorymaster
       .findAndCountAll({
         where: whereCnd,
         order: [["createddate", "DESC"]]
       })
       .then(result => {
-        console.log("===========result", result);
         if (result && result.count && result.count > 0) {
           resolve({
             status: 201,
@@ -75,9 +71,9 @@ exports.createNewCategoryMasterDetails = reqArg => {
             result: {}
           });
         } else {
-          let dt = dateTime.create();
+          let dt = datetime.create();
           dt = dt.format('Y-m-d H:M:S')
-          categorymaster
+          db.categorymaster
             .create({
               category: reqArg.category,
               desctiption: reqArg.desctiption,
@@ -94,7 +90,6 @@ exports.createNewCategoryMasterDetails = reqArg => {
         }
       })
       .catch(error => {
-        console.log("error=========", error);
         reject({
           status: 404,
           message: error.message || "Internal Server error",
@@ -104,14 +99,14 @@ exports.createNewCategoryMasterDetails = reqArg => {
   });
 };
 
-exports.updateCategoryMasterDetails = reqArg => {
+exports.updateCategoryMasterDetails = (reqArg) => {
   return new Promise((resolve, reject) => {
     let whereCnd = {};
     if (reqArg) {
-      reqArg.catid ? (whereCnd.catid = Number(reqArg.catid)) : "";
-      reqArg.category ? (whereCnd.category = reqArg.category) : "";
+      reqArg.catid ? whereCnd.catid = Number(reqArg.catid) : "";
+      // reqArg.category ? whereCnd.category = reqArg.category : "";
     }
-    categorymaster
+    db.categorymaster
       .findAndCountAll({
         where: whereCnd,
         order: [["createddate", "DESC"]]
@@ -125,19 +120,22 @@ exports.updateCategoryMasterDetails = reqArg => {
             result: {}
           });
         } else {
-          let dt = dateTime.create();
+          let dt = datetime.create();
           dt = dt.format('Y-m-d H:M:S');
           let updateData = {};
+          reqArg.category
+          ? updateData.category = reqArg.category
+          : "";
           reqArg.desctiption
-            ? (updateData.desctiption = reqArg.desctiption)
+            ? updateData.desctiption = reqArg.desctiption
             : "";
             reqArg.lastmodifiedby
-            ? (updateData.lastmodifiedby = reqArg.lastmodifiedby)
+            ? updateData.lastmodifiedby = reqArg.lastmodifiedby
             : "";
             updateData.lastmodifieddate=dt
 
-          reqArg.category ? (updateData.category = reqArg.category) : "";
-          categorymaster
+            console.log("==============",reqArg,"==",updateData)
+          db.categorymaster
             .update(updateData, {
               where: whereCnd
             })

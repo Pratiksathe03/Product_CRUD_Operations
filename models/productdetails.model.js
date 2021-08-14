@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING
         },
         qty: {
-			field: 'createddate',
+			field: 'qty',
 			type: DataTypes.INTEGER
         },
         price: {
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.DECIMAL
         },
         catid: {
-			field: 'price',
+			field: 'catid',
 			type: DataTypes.INTEGER
         },
         createdby: {

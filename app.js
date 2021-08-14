@@ -22,8 +22,7 @@ const pool = new Pool(storage.PgSQLDB);
 const startServer = async function() {
     const client = await pool.connect();
     if(client){
-        console.log("connected....")
-        // return client
+        console.log("connected....");
     }else{
         console.log("Failed to connect DB....")
     }
