@@ -2,16 +2,15 @@ const sequelize = require("sequelize");
 const db = require("../models");
 const datetime = require('node-datetime');
 
-exports.getCategoryMasterDetails = reqArg => {
+exports.getUserRoleDetails = reqArg => {
   return new Promise((resolve, reject) => {
     let whereCnd = {};
     if (reqArg) {
-      reqArg.catid ? whereCnd.catid = Number(reqArg.catid) : "";
-      reqArg.category ? whereCnd.category = reqArg.category : "";
-      reqArg.desctiption ? whereCnd.desctiption = reqArg.desctiption : "";
+      reqArg.roleid ? whereCnd.roleid = Number(reqArg.roleid) : "";
+      reqArg.rolename ? whereCnd.rolename = reqArg.rolename : "";
     }
 
-    db.categorymaster
+    db.userrolemaster
       .findAndCountAll({
         where: whereCnd,
         // order: [
@@ -50,13 +49,13 @@ exports.getCategoryMasterDetails = reqArg => {
   });
 };
 
-exports.createNewCategoryMasterDetails = reqArg => {
+exports.createNewUserRoleMasterDetails = reqArg => {
   return new Promise((resolve, reject) => {
     let whereCnd = {};
     if (reqArg) {
-      reqArg.category ? (whereCnd.category = reqArg.category) : "";
+      reqArg.rolename ? (whereCnd.rolename = reqArg.rolename) : "";
     }
-    db.categorymaster
+    db.userrolemaster
       .findAndCountAll({
         where: whereCnd,
         order: [["createddate", "DESC"]]
@@ -65,23 +64,23 @@ exports.createNewCategoryMasterDetails = reqArg => {
         if (result && result.count && result.count > 0) {
           resolve({
             status: 201,
-            message: "Category Already Exist",
+            message: "Role Already Exist",
             result: {}
           });
         } else {
           let dt = datetime.create();
           dt = dt.format('Y-m-d H:M:S')
-          db.categorymaster
+          db.userrolemaster
             .create({
-              category: reqArg.category,
-              desctiption: reqArg.desctiption,
+                rolename: reqArg.rolename,
+              isactive: reqArg.isactive,
               createdby:reqArg.createdby,
               createddate: dt
             })
             .then(result => {
               resolve({
                 status: 200,
-                message: "Category Created Successfully",
+                message: "Role Created Successfully",
                 result: result
               });
             });
@@ -101,10 +100,10 @@ exports.updateCategoryMasterDetails = (reqArg) => {
   return new Promise((resolve, reject) => {
     let whereCnd = {};
     if (reqArg) {
-      reqArg.catid ? whereCnd.catid = Number(reqArg.catid) : "";
-      // reqArg.category ? whereCnd.category = reqArg.category : "";
+      reqArg.roleid ? whereCnd.roleid = Number(reqArg.roleid) : "";
+      // reqArg.rolename ? whereCnd.rolename = reqArg.rolename : "";
     }
-    db.categorymaster
+    db.userrolemaster
       .findAndCountAll({
         where: whereCnd,
         order: [["createddate", "DESC"]]
@@ -114,40 +113,40 @@ exports.updateCategoryMasterDetails = (reqArg) => {
         if (result && result.count && result.count == 0) {
           resolve({
             status: 201,
-            message: "Category Not Exits",
+            message: "Role Not Exits",
             result: {}
           });
         } else {
           let dt = datetime.create();
           dt = dt.format('Y-m-d H:M:S');
           let updateData = {};
-          reqArg.category
-          ? updateData.category = reqArg.category
+          reqArg.rolename
+          ? updateData.rolename = reqArg.rolename
           : "";
-          reqArg.desctiption
-            ? updateData.desctiption = reqArg.desctiption
+          reqArg.isactive
+            ? updateData.isactive = reqArg.isactive
             : "";
             reqArg.lastmodifiedby
             ? updateData.lastmodifiedby = reqArg.lastmodifiedby
             : "";
             updateData.lastmodifieddate=dt
 
-            console.log("==============",reqArg,"==",updateData)
-          db.categorymaster
+            // console.log("==============",reqArg,"==",updateData)
+          db.userrolemaster
             .update(updateData, {
               where: whereCnd
             })
             .then(result => {
               resolve({
                 status: 200,
-                message: "Category Updated Successfully",
+                message: "Role Updated Successfully",
                 result: result
               });
             });
         }
       })
       .catch(error => {
-        console.log("error=========", error);
+        // console.log("error=========", error);
         reject({
           status: 404,
           message: error.message || "Internal Server error",

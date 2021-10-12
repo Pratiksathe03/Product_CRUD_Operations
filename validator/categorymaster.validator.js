@@ -46,7 +46,7 @@ exports.ValidateUpdateRquest = data => {
   try {
     const schema = Joi.object().keys({
       catid: Joi.number().required().error(new Error("Provide catid(number)")),
-      description: Joi.string.optional(),
+      // description: Joi.string.optional(),
       category: Joi.string()
         .required()
         .error(new Error("Provide category(string)")),

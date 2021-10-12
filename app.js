@@ -15,6 +15,8 @@ app.use(function(req, res, next) {
 
 const  storage = require('./config/dbDetails');
 
+console.log("storage.PgSQLDB")
+
 const pool = new Pool(storage.PgSQLDB);
 
 

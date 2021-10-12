@@ -1,10 +1,10 @@
 
 const PgSQLDB= {
     user: "postgres",
-    password: "",
+    password: "test",
     host: "localhost",
     port: 5432,
-    database: "ProductManagement",
+    // database: "ProductManagement",
     dialect: 'postgres'
   }
 
